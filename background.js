@@ -6,7 +6,7 @@ chrome.runtime.onInstalled.addListener(() => {
     if (request.action === "fetchData") {
       fetch(request.url, {
         headers: {
-            'Origin': 'mon_appli'
+            'Origin': 'mon_appli' // Needed to get the right information from metromobilité api
         }
     })
         .then(response => response.json())

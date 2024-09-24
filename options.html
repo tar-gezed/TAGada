@@ -1,24 +1,49 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My Test Extension Options</title>
-  </head>
-  <body>
-    <select id="color">
-      <option value="red">red</option>
-      <option value="green">green</option>
-      <option value="blue">blue</option>
-      <option value="yellow">yellow</option>
-    </select>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter Favoris - Horaires Bus/Tram</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
 
-    <label>
-      <input type="checkbox" id="like" />
-      I like colors.
-    </label>
+        h1 {
+            font-size: 1.5rem;
+        }
 
-    <div id="status"></div>
-    <button id="save">Save</button>
+        .line-button {
+            transition: transform 0.1s ease-in-out;
+        }
 
-    <!-- <script src="options.js"></script> -->
-  </body>
+        .line-button:hover {
+            transform: scale(1.05);
+        }
+
+        .line-selector {
+            margin-bottom: 20px;
+        }
+
+        #arret {
+            margin-top: 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ajouter un Favori</h1>
+
+    <div id="lineSelector" class="line-selector"></div>
+
+    <select id="arret" class="hidden"></select>
+    <span id="favoriteStar" class="material-icons favorite-star hidden">star_border</span>
+    <button id="addFavoriteButton">Ajouter aux favoris</button>
+
+    <script src="options.js"></script>
+</body>
 </html>
