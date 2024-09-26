@@ -4,16 +4,6 @@ let favorites = [];
 document.addEventListener('DOMContentLoaded', function () {
     loadFavorites();
     fetchData('https://data.mobilites-m.fr/api/routers/default/index/routes', initializeLineData);
-
-    document.getElementById('addFavoriteButton').addEventListener('click', function() {
-        const select = document.getElementById('arret');
-        const clusterStopId = select.value;
-        const selectedOption = select.options[select.selectedIndex];
-        const lineId = selectedOption.getAttribute('data-line-id');
-        const stationName = selectedOption.textContent;
-        
-        addFavorite(clusterStopId, lineId, stationName);
-    });
 });
 
 function loadFavorites() {
@@ -33,9 +23,18 @@ function addFavorite(clusterStopId, lineId, stationName) {
     if (index === -1) {
         favorites.push({ clusterStopId, lineId, stationName });
         saveFavorites();
-        alert('Favori ajouté !');
+        // alert('Favori ajouté !');
     } else {
         alert('Ce favori existe déjà.');
+    }
+}
+
+function removeFavorite(clusterStopId, lineId) {
+    const index = favorites.findIndex(f => f.clusterStopId === clusterStopId && f.lineId === lineId);
+    if (index !== -1) {
+        favorites.splice(index, 1);
+        saveFavorites();
+        alert('Favori supprimé.');
     }
 }
 
@@ -109,6 +108,10 @@ function populateLines(data) {
                                 text-overflow: ellipsis;
                             "
                             data-line-id="${line.id}"
+                            data-line-long-name="${line.longName}"
+                            data-line-short-name="${line.shortName}"
+                            data-line-text-color="${line.textColor}"
+                            data-line-color="${line.color}"
                             title="${line.longName}"
                         >${line.shortName}</button>
                     `).join('')}
@@ -121,24 +124,67 @@ function populateLines(data) {
     lineSelector.addEventListener('click', function(event) {
         if (event.target.matches('.line-button')) {
             const lineId = event.target.dataset.lineId;
+            const longName = event.target.dataset.lineLongName;
+            const shortName = event.target.dataset.lineShortName;
+            const color = event.target.dataset.lineColor;
+            const textColor = event.target.dataset.lineTextColor;
+
+            // Afficher le bloc de droite
+            const stopListContainer = document.getElementById('stopListContainer');
+            stopListContainer.classList.remove('hidden');
+
+            // Mettre à jour le sous-titre avec le nom long de la ligne et son symbole
+            const stopListSubtitle = document.getElementById('stop-list-subtitle');
+            stopListSubtitle.innerHTML = `
+            <div class="stop-list-subtitle-container">
+                <span class="line-circle-large" style="background-color: #${color}; color: #${textColor};">
+                    ${shortName}
+                </span>
+                <span>${longName}</span>
+            </div>
+            `;
+
             fetchData(`https://data.mobilites-m.fr/api/routers/default/index/routes/${lineId}/clusters`, function(data) {
-            populateStops(data, lineId);
-        });
+                populateStops(data, lineId, longName, shortName, color, textColor);
+            });
         }
     });
 }
 
-function populateStops(data, lineId) {
-    const select = document.getElementById('arret');
-    select.innerHTML = ''; // Clear previous options
-    data.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.code;
-        option.textContent = item.name;
-        option.setAttribute('data-line-id', lineId);
-        select.appendChild(option);
+function populateStops(data, lineId, longName, shortName, color, textColor) {
+    const stopList = document.getElementById('stopList');
+    stopList.innerHTML = ''; // Clear previous stops
+
+    data.forEach(stop => {
+        let isFavorite = favorites.some(f => f.clusterStopId === stop.code && f.lineId === lineId);
+        const favoriteIcon = isFavorite ? 'star' : 'star_border';
+        const stopItem = document.createElement('div');
+        stopItem.className = 'stop-item';
+        stopItem.innerHTML = `
+            <div class="stop-info">
+                <div style="background-color: #${color}; color: #${textColor};" class="line-circle" title="${longName}">${shortName}</div>
+                <div>
+                    <div class="stop-name">${stop.name}</div>
+                </div>
+            </div>
+            <span class="material-icons favorite-icon" data-stop-id="${stop.code}" data-line-id="${lineId}">
+                ${favoriteIcon}
+            </span>
+        `;
+
+        stopItem.querySelector('.favorite-icon').addEventListener('click', function () {
+            if (isFavorite) {
+                removeFavorite(stop.code, lineId);
+                this.textContent = 'star_border'; // Update to empty star
+            } else {
+                addFavorite(stop.code, lineId, stop.name);
+                this.textContent = 'star'; // Update to filled star
+            }
+            isFavorite = !isFavorite; // Toggle the state
+        });
+
+        stopList.appendChild(stopItem);
     });
-    select.classList.remove('hidden');
 }
 
 function fetchData(url, callback) {

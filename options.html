@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter Favoris - Horaires Bus/Tram</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -10,6 +10,8 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
             color: #333;
         }
 
@@ -17,33 +19,122 @@
             font-size: 1.5rem;
         }
 
-        .line-button {
-            transition: transform 0.1s ease-in-out;
-        }
-
-        .line-button:hover {
-            transform: scale(1.05);
+        .container {
+            display: flex;
+            justify-content: space-between;
         }
 
         .line-selector {
-            margin-bottom: 20px;
+            width: 45%;
         }
 
-        #arret {
-            margin-top: 10px;
-            padding: 5px;
+        .stop-list-container {
+            width: 45%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .stop-list-container h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .stop-list-container .line-circle-large {
+            width: 28px;
+            height: 28px;
+            margin-right: 10px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            line-height: 28px;
+            text-align: center;
+        }
+
+        .stop-list-subtitle-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .stop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .stop-item .favorite-icon {
+            cursor: pointer;
+        }
+
+        .stop-item:hover {
+            background-color: #f1f1f1;
+        }
+
+        .stop-item .stop-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .line-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .stop-name {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .stop-area {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .favorite-icon {
+            font-size: 1.5rem;
+            color: #FFD700;
+        }
+
+        .favorite-icon:hover {
+            color: #ff9900;
         }
     </style>
 </head>
+
 <body>
+
     <h1>Ajouter un Favori</h1>
 
-    <div id="lineSelector" class="line-selector"></div>
+    <div class="container">
+        <!-- Bloc de gauche : Sélection de la ligne -->
+        <div id="lineSelector" class="line-selector"></div>
 
-    <select id="arret" class="hidden"></select>
-    <span id="favoriteStar" class="material-icons favorite-star hidden">star_border</span>
-    <button id="addFavoriteButton">Ajouter aux favoris</button>
+        <!-- Bloc de droite : Sélection des arrêts (initialement caché) -->
+        <div id="stopListContainer" class="stop-list-container hidden">
+            <h2 id="stop-list-title">Sélectionnez un arrêt pour ajouter aux favoris</h2>
+            <h3 id="stop-list-subtitle">
+                <!-- Ici, le cercle avec le symbole de la ligne et le nom long seront affichés -->
+            </h3>
+            <div id="stopList"></div>
+        </div>
+    </div>
 
     <script src="options.js"></script>
+
 </body>
+
 </html>

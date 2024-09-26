@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "TAGada",
   "description": "Affiche les prochains passages de bus/tram pour une ligne et un arrêt choisis",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icons/icon128.png"
@@ -17,10 +17,7 @@
     "128": "icons/icon128.png"
   },
   "permissions": [
-    "activeTab",
-    "scripting",
-    "storage",
-    "https://data.mobilites-m.fr/*"
+    "storage"
   ],
   "options_page": "options.html"
 }
